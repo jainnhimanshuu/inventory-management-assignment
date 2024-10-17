@@ -9,10 +9,12 @@ interface InventoryState {
   setTableData: (data: IInventory[]) => void;
 }
 const useInventoryStore = create<InventoryState>((set) => ({
-  isAdmin: false,
+  isAdmin: true,
   tableData: [],
   setIsAdmin: (isAdmin) => set({ isAdmin }),
-  setTableData: (data) => set({ tableData: data }),
+  setTableData: (data) => set({ 
+    tableData: data.map(item => ({ ...item, isDisabled: item.isDisabled ?? false }))
+  })
 }));
 
 export default useInventoryStore;

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Switch, Widget, Table } from "./components";
 import {
   MdShoppingCart,
@@ -7,24 +7,100 @@ import {
   MdCategory,
   MdLogout,
 } from "react-icons/md";
-import { getNumberOfCat, getOutOfStock, getTotalValue } from "./lib/utils";
+import {
+  getNumberOfCat,
+  getOutOfStock,
+  getTotalProduct,
+  getTotalValue,
+} from "./lib/utils";
 import useFetch from "react-fetch-hook";
 import useInventoryStore from "./store/useInventoryStore";
 import { IInventory } from "./types/productType";
 
 function App() {
+  // Fetching inventory data using useFetch
   const { data, error } = useFetch(
-    "https://dev-0tf0hinghgjl39z.api.raw-labs.com/inventory"
+    "https://dev-0tf0hinghgjl39za.api.raw-labs.com/inventory"
   );
 
+  console.log(data);
+
+  // Accessing data from store
   const { isAdmin, tableData, setIsAdmin, setTableData } = useInventoryStore();
 
-  if (data) {
-    setTableData(data as IInventory[]);
-  }
+  useEffect(() => {
+    const tableDataDummy = [
+      {
+        name: "Bluetooth",
+        category: "Electronic",
+        value: "$150",
+        quantity: 5,
+        price: "$30",
+      },
+      {
+        name: "Edifier M43560",
+        category: "Electronic",
+        value: "0",
+        quantity: 0,
+        price: "$0",
+      },
+      {
+        name: "Sony 4k ultra 55 inch TV",
+        category: "Electronic",
+        value: "$1190",
+        quantity: 17,
+        price: "$70",
+      },
+      {
+        name: "Samsumg 55 inch TV",
+        category: "Electronic",
+        value: "$600",
+        quantity: 50,
+        price: "$12",
+      },
+      {
+        name: "samsumg S34 Ultra",
+        category: "phone",
+        value: "$0",
+        quantity: 0,
+        price: "$0",
+      },
+    ];
 
+    // if (data) {
+    setTableData(tableDataDummy as IInventory[]);
+    // }
+  }, [setTableData]);
+
+  // Change User Role
   const handleIsAdmin = () => {
     setIsAdmin(!isAdmin);
+  };
+
+  // Check and delete item from store
+  const handleDelete = (id: number): void => {
+    if (!isAdmin) return;
+    const updatedTableData = tableData.filter((_, index) => index !== id);
+    setTableData(updatedTableData);
+  };
+
+  // Check and disable item for user
+  const handleDisable = (id: number): void => {
+    if (!isAdmin) return;
+    const updatedTableData = tableData.map((item, index) =>
+      index === id ? { ...item, isDisabled: !item.isDisabled } : item
+    );
+
+    setTableData(updatedTableData);
+  };
+
+  // Updated the edited data to the store
+  const handleEdit = (data: IInventory, id: number): void => {
+    const updatedTableData = tableData.map((item, index) =>
+      index === id ? { ...item, ...data } : item
+    );
+
+    setTableData(updatedTableData);
   };
 
   const tableHeading = [
@@ -36,21 +112,22 @@ function App() {
     "ACTION",
   ];
 
+  // Parsing widget value and memoizing the value
   const totalValue = useMemo(() => getTotalValue(tableData), [tableData]);
   const outOfStock = useMemo(() => getOutOfStock(tableData), [tableData]);
   const numberOfCat = useMemo(() => getNumberOfCat(tableData), [tableData]);
 
-  if (error) {
-    return (
-      <div className="text-white">
-        <p>Code: {error.status}</p>
-        <p>Message: {error.statusText}</p>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="text-white">
+  //       <p>Code: {error.status}</p>
+  //       <p>Message: {error.statusText}</p>
+  //     </div>
+  //   );
+  // }
 
   if (!data && !error) {
-    return <p>Loading...</p>;
+    return <p className="text-white">Loading...</p>;
   }
 
   return (
@@ -71,7 +148,7 @@ function App() {
           <Widget
             icon={<MdShoppingCart />}
             title="Total Product"
-            value={tableData.length}
+            value={getTotalProduct(tableData)}
           />
           <Widget
             icon={<MdCurrencyExchange />}
@@ -89,7 +166,17 @@ function App() {
             value={numberOfCat}
           />
         </section>
-        <Table tableHeading={tableHeading} tableData={tableData} />
+        {tableData.length > 0 ? (
+          <Table
+            tableHeading={tableHeading}
+            tableData={tableData}
+            handleDelete={handleDelete}
+            handleDisable={handleDisable}
+            handleEdit={handleEdit}
+          />
+        ) : (
+          <p className="text-white p-2">No Data To Show</p>
+        )}
       </main>
     </>
   );

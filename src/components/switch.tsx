@@ -21,12 +21,12 @@ const Switch = (props: ISwitchProps) => {
         </span>
         <span
           className={`mx-4 flex h-4 w-10 items-center rounded-full duration-200 ${
-            isAdmin ? "bg-[#7d8945]" : "bg-[#CCCCCE]"
+            isAdmin ? "bg-[#CCCCCE]" : "bg-[#7d8945]"
           }`}
         >
           <span
             className={`dot h-5 w-5 rounded-full duration-200 ${
-              isAdmin ? "translate-x-[22px] bg-[#e5fd72]" : "bg-white"
+              isAdmin ? " bg-white" : "bg-[#e5fd72] translate-x-[22px]"
             }`}
           ></span>
         </span>
