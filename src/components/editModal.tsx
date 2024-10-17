@@ -1,5 +1,6 @@
 import { IInventory } from "../types/productType";
 import { IoCloseSharp } from "react-icons/io5";
+import { useEffect, useState } from "react";
 
 interface IEditModalProps {
   editData: IInventory;
@@ -10,30 +11,46 @@ interface IEditModalProps {
 export default function EditModal(props: IEditModalProps) {
   const { editData, onClose, onSave } = props;
 
+  const [formData, setFormData] = useState<IInventory>(editData);
+
+  useEffect(() => {
+    setFormData(editData);
+  }, [editData]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => {
+      const updatedData = {
+        ...prev,
+        [name]: name === "quantity" ? Number(value) : value,
+      };
+
+      // Update value based on price and quantity
+      if (name === "price" || name === "quantity") {
+        updatedData.value = (
+          Number(updatedData.price) * updatedData.quantity
+        ).toString();
+      }
+
+      // Update price based on value and quantity if quantity is not zero
+      if (name === "value" && updatedData.quantity > 0) {
+        updatedData.price = (
+          Number(updatedData.value) / updatedData.quantity
+        ).toString();
+      }
+
+      return updatedData;
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-
     const updatedData: IInventory = {
-      name: editData.name as string,
-      category: formData.get("category")
-        ? (formData.get("category") as string)
-        : editData.category,
-      price:
-        formData.get("price") !== ""
-          ? (formData.get("price") as string)
-          : editData.price,
-      quantity:
-        formData.get("quantity") !== ""
-          ? Number(formData.get("quantity"))
-          : editData.quantity,
-      value: "",
+      ...formData,
+      value: (Number(formData.price) * formData.quantity).toString(),
     };
-
-    updatedData.value = (
-      Number(updatedData.price) * Number(updatedData.quantity)
-    ).toString();
 
     onSave(updatedData, editData.id as number);
     onClose();
@@ -54,6 +71,7 @@ export default function EditModal(props: IEditModalProps) {
           </div>
         </div>
         <p className="text-white mb-4">{editData.name}</p>
+
         <form
           className="grid md:grid-cols-2 grid-cols-1 gap-4"
           onSubmit={handleSubmit}
@@ -63,43 +81,49 @@ export default function EditModal(props: IEditModalProps) {
             <input
               type="text"
               name="category"
-              placeholder={editData.category}
+              placeholder={formData.category}
+              onChange={handleChange}
               className="w-full h-8 px-4 py-1 rounded-lg bg-slate-200"
             />
           </div>
 
           <div className="flex flex-col text-sm gap-2">
-            <p className="text-slate-300">price</p>
+            <p className="text-slate-300">Price</p>
             <input
               type="number"
               min="0"
               name="price"
-              placeholder={editData.price}
+              placeholder={formData.price}
+              onChange={handleChange}
               className="w-full h-8 px-4 py-1 rounded-lg bg-slate-200"
             />
           </div>
           <div className="flex flex-col text-sm gap-2">
-            <p className="text-slate-300">quantity</p>
+            <p className="text-slate-300">Quantity</p>
             <input
               type="number"
               min="0"
               name="quantity"
-              placeholder={editData.quantity.toString()}
+              placeholder={formData.quantity.toString()}
+              onChange={handleChange}
               className="w-full h-8 px-4 py-1 rounded-lg bg-slate-200"
             />
           </div>
           <div className="flex flex-col text-sm gap-2">
-            <p className="text-slate-300">value</p>
+            <p className="text-slate-300">Value</p>
             <input
               type="number"
               min="0"
               name="value"
-              placeholder={editData.value.toString()}
+              onChange={handleChange}
+              placeholder={formData.value}
               className="w-full h-8 px-4 py-1 rounded-lg bg-slate-200"
             />
           </div>
           <div className="col-span-2 flex justify-end gap-2">
-            <button className="text-[#e5fd72]">Cancel</button>
+            <button className="text-[#e5fd72]" onClick={onClose}>
+              Cancel
+            </button>
             <button
               type="submit"
               className={`bg-zinc-700 flex items-center justify-center rounded-lg cursor-pointer px-3 py-1 text-[#e5fd72]`}
