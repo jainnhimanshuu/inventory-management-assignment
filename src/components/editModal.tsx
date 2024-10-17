@@ -1,6 +1,7 @@
 import { IInventory } from "../types/productType";
 import { IoCloseSharp } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { parseAmt } from "../lib/utils";
 
 interface IEditModalProps {
   editData: IInventory;
@@ -10,8 +11,10 @@ interface IEditModalProps {
 
 export default function EditModal(props: IEditModalProps) {
   const { editData, onClose, onSave } = props;
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [formData, setFormData] = useState<IInventory>(editData);
+  const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(true);
 
   useEffect(() => {
     setFormData(editData);
@@ -42,6 +45,17 @@ export default function EditModal(props: IEditModalProps) {
 
       return updatedData;
     });
+
+    if (formRef.current) {
+      const formFieldsData = new FormData(formRef.current);
+      const formFieldsEmpty =
+        formFieldsData.get("category") === "" &&
+        formFieldsData.get("quantity") === "" &&
+        formFieldsData.get("price") === "" &&
+        formFieldsData.get("value") === "";
+
+      setIsBtnDisabled(formFieldsEmpty);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -73,6 +87,7 @@ export default function EditModal(props: IEditModalProps) {
         <p className="text-white mb-4">{editData.name}</p>
 
         <form
+          ref={formRef}
           className="grid md:grid-cols-2 grid-cols-1 gap-4"
           onSubmit={handleSubmit}
         >
@@ -93,7 +108,7 @@ export default function EditModal(props: IEditModalProps) {
               type="number"
               min="0"
               name="price"
-              placeholder={formData.price}
+              placeholder={parseAmt(formData.price)}
               onChange={handleChange}
               className="w-full h-8 px-4 py-1 rounded-lg bg-slate-200"
             />
@@ -116,7 +131,7 @@ export default function EditModal(props: IEditModalProps) {
               min="0"
               name="value"
               onChange={handleChange}
-              placeholder={formData.value}
+              placeholder={parseAmt(formData.value)}
               className="w-full h-8 px-4 py-1 rounded-lg bg-slate-200"
             />
           </div>
@@ -126,7 +141,10 @@ export default function EditModal(props: IEditModalProps) {
             </button>
             <button
               type="submit"
-              className={`bg-zinc-700 flex items-center justify-center rounded-lg cursor-pointer px-3 py-1 text-[#e5fd72]`}
+              className={`bg-zinc-700 flex items-center justify-center rounded-lg cursor-pointer px-3 py-1 ${
+                isBtnDisabled ? "text-gray-500" : "text-[#e5fd72]"
+              } `}
+              disabled={isBtnDisabled}
             >
               Save
             </button>

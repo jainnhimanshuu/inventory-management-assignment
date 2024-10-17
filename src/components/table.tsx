@@ -4,6 +4,7 @@ import { IInventory } from "../types/productType";
 import useInventoryStore from "../store/useInventoryStore";
 import { useState } from "react";
 import EditModal from "./editModal";
+import { parseAmt } from "../lib/utils";
 
 interface ITableProps {
   tableHeading: string[];
@@ -62,9 +63,9 @@ export default function Table(props: ITableProps) {
               >
                 <td className="p-2">{data.name}</td>
                 <td className="p-2">{data.category}</td>
-                <td className="p-2">{data.price}</td>
+                <td className="p-2">{parseAmt(data.price)}</td>
                 <td className="p-2">{data.quantity}</td>
-                <td className="p-2">{data.value}</td>
+                <td className="p-2">{parseAmt(data.value)}</td>
                 <td className="flex items-center justify-start p-2 h-full text-sm">
                   <MdModeEdit
                     color={isAdmin ? "green" : "grey"}

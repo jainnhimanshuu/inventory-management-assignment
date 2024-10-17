@@ -31,3 +31,11 @@ export const getTotalValue =(data: IInventory[]):string => {
 export const getParsedInventoryData = (data: IInventory[]): IInventory[] => {
     return data.filter(item => !item.isDisabled);
 }
+
+export const parseAmt = (value: string) => {
+    if (value.startsWith('$')) {
+        return value; 
+    } else {
+        return '$' + value; 
+    }
+}
