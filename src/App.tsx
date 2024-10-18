@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { Switch, Widget, Table } from "./components";
+import { Switch, Widget, Table, Skeleton } from "./components";
 import {
   MdShoppingCart,
   MdCurrencyExchange,
@@ -20,7 +20,7 @@ import { InventoryMockData } from "./lib/mockData";
 
 function App() {
   // Fetching inventory data using useFetch
-  const { data, error } = useFetch(
+  const { isLoading, data } = useFetch(
     "https://dev-0tf0hinghgjl39z.api.raw-labs.com/inventory"
   );
 
@@ -82,8 +82,8 @@ function App() {
   const outOfStock = useMemo(() => getOutOfStock(tableData), [tableData]);
   const numberOfCat = useMemo(() => getNumberOfCat(tableData), [tableData]);
 
-  if (!data && !error) {
-    return <p className="text-white">Loading...</p>;
+  if (isLoading) {
+    return <Skeleton />;
   }
 
   return (
