@@ -66,7 +66,7 @@ export default function Table(props: ITableProps) {
                 <td className="p-2">{parseAmt(data.price)}</td>
                 <td className="p-2">{data.quantity}</td>
                 <td className="p-2">{parseAmt(data.value)}</td>
-                <td className="flex items-center justify-start p-2 h-full text-2xl">
+                <td className="flex items-center justify-start p-2 h-full text-xl lg:text-sm">
                   <MdModeEdit
                     color={isAdmin ? "green" : "grey"}
                     className={`mr-3 lg:mr-2 ${
