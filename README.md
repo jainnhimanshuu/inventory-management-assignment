@@ -3,7 +3,7 @@
 
 ## Project Overview
 
-This project is an Inventory Management System built using React and TypeScript. It allows users to manage inventory items, including adding, editing, deleting, and viewing products. The application features an admin role that provides additional capabilities for managing the inventory.
+This project is an Inventory Management System built using React and TypeScript. It allows users to view the products. The application features an admin role that provides additional capabilities like editing, deleting, and disabling products for managing the inventory.
 
 ## Project Structure
 
