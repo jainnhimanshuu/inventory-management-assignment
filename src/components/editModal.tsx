@@ -74,7 +74,7 @@ export default function EditModal(props: IEditModalProps) {
 
   return (
     <div className="fixed flex items-center justify-center bg-black/20 top-0 left-0 bottom-0 right-0">
-      <div className="w-2/5 p-8 rounded-lg bg-zinc-800">
+      <div className="lg:w-2/5 md:4/5 w-full p-8 rounded-lg bg-zinc-800">
         <div className="flex items-center justify-between mb-1 text-3xl text-gray-200">
           <p>Edit Product </p>
           <div

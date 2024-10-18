@@ -66,17 +66,17 @@ export default function Table(props: ITableProps) {
                 <td className="p-2">{parseAmt(data.price)}</td>
                 <td className="p-2">{data.quantity}</td>
                 <td className="p-2">{parseAmt(data.value)}</td>
-                <td className="flex items-center justify-start p-2 h-full text-sm">
+                <td className="flex items-center justify-start p-2 h-full text-2xl">
                   <MdModeEdit
                     color={isAdmin ? "green" : "grey"}
-                    className={`mr-2 ${
+                    className={`mr-3 lg:mr-2 ${
                       isAdmin ? "cursor-pointer" : "cursor-not-allowed"
                     }`}
                     title="Edit"
                     onClick={() => handleEditModal(index)}
                   />
                   <div
-                    className={`mr-2 ${
+                    className={`mr-3 lg:mr-2 ${
                       isAdmin
                         ? "text-violet-700 cursor-pointer"
                         : "text-gray-300 cursor-not-allowed"

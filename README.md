@@ -1,50 +1,99 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Inventory Management System
 
-Currently, two official plugins are available:
+## Project Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project is an Inventory Management System built using React and TypeScript. It allows users to manage inventory items, including adding, editing, deleting, and viewing products. The application features an admin role that provides additional capabilities for managing the inventory.
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+The project is organized into several directories and files, each serving a specific purpose:
 
-- Configure the top-level `parserOptions` property like this:
+### Directory Breakdown
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- **/components**: Contains all the reusable components used throughout the application. Each component is responsible for a specific part of the UI.
+
+- `Table.tsx`: Displays the inventory items in a tabular format.
+
+- `Widget.tsx`: Represents a statistical widget for displaying inventory metrics.
+
+- `Switch.tsx`: A toggle switch for changing user roles (admin/user).
+
+- `EditModal.tsx`: A modal for editing inventory item details.
+
+- **/lib**: Contains utility functions that perform various calculations and data manipulations related to inventory.
+
+- `utils.ts`: Functions for calculating total products, out-of-stock items, total value, and parsing amounts.
+
+- **/store**: Contains the Zustand store for managing global state.
+
+- `useInventoryStore.ts`: Defines the state structure and actions for managing inventory data and user roles.
+
+- **/types**: Contains TypeScript interfaces for type safety.
+
+- `productType.ts`: Defines the `IInventory` interface for inventory items.
+
+- **App.tsx**: The main application component that fetches inventory data, manages state, and renders the UI.
+
+- **index.tsx**: The entry point of the application where the React app is rendered into the DOM.
+
+- **index.css**: Contains global styles using Tailwind CSS for styling the application.
+
+## Approaches
+
+### State Management
+
+The application uses Zustand for state management, which provides a simple and efficient way to manage global state without the complexity of Redux. The state includes:
+
+- `isAdmin`: A boolean indicating whether the user has admin privileges.
+
+- `tableData`: An array of inventory items.
+
+### Component-Based Architecture
+
+The application follows a component-based architecture, where each UI element is encapsulated in its own component. This promotes reusability and maintainability. Components are designed to be as independent as possible, allowing for easier testing and updates.
+
+### TypeScript
+
+TypeScript is used throughout the project to provide type safety and improve code quality. Interfaces are defined for inventory items and component props, ensuring that the data structures are consistent and reducing runtime errors.
+
+### Responsive Design
+
+The application is designed to be responsive, utilizing Tailwind CSS for styling. This allows the UI to adapt to different screen sizes, providing a better user experience on both desktop and mobile devices.
+
+### Fetching Data
+
+The application fetches inventory data from an external API using the `react-fetch-hook` library. This allows for easy data retrieval and management within the application.
+
+## Getting Started
+
+To run the project locally, follow these steps:
+
+1. Clone the repository:
+
+```
+git clone <repository-url>
+
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Navigate to the project directory:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
 ```
+cd inventory-management-system
+
+```
+
+3. Install the dependencies:
+
+```
+npm install
+
+```
+
+4. Start the development server:
+
+```
+npm run dev
+```
+
+5. Open your browser and navigate to `http://localhost:5173` to view the application.

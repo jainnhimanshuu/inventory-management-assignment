@@ -16,61 +16,26 @@ import {
 import useFetch from "react-fetch-hook";
 import useInventoryStore from "./store/useInventoryStore";
 import { IInventory } from "./types/productType";
+import { InventoryMockData } from "./lib/mockData";
 
 function App() {
   // Fetching inventory data using useFetch
   const { data, error } = useFetch(
-    "https://dev-0tf0hinghgjl39za.api.raw-labs.com/inventory"
+    "https://dev-0tf0hinghgjl39z.api.raw-labs.com/inventory"
   );
-
-  console.log(data);
 
   // Accessing data from store
   const { isAdmin, tableData, setIsAdmin, setTableData } = useInventoryStore();
 
   useEffect(() => {
-    const tableDataDummy = [
-      {
-        name: "Bluetooth",
-        category: "Electronic",
-        value: "$150",
-        quantity: 5,
-        price: "$30",
-      },
-      {
-        name: "Edifier M43560",
-        category: "Electronic",
-        value: "0",
-        quantity: 0,
-        price: "$0",
-      },
-      {
-        name: "Sony 4k ultra 55 inch TV",
-        category: "Electronic",
-        value: "$1190",
-        quantity: 17,
-        price: "$70",
-      },
-      {
-        name: "Samsumg 55 inch TV",
-        category: "Electronic",
-        value: "$600",
-        quantity: 50,
-        price: "$12",
-      },
-      {
-        name: "samsumg S34 Ultra",
-        category: "phone",
-        value: "$0",
-        quantity: 0,
-        price: "$0",
-      },
-    ];
+    const tableDataDummy = InventoryMockData;
 
-    // if (data) {
-    setTableData(tableDataDummy as IInventory[]);
-    // }
-  }, [setTableData]);
+    if (data) {
+      setTableData(data as IInventory[]);
+    } else {
+      setTableData(tableDataDummy as IInventory[]);
+    }
+  }, [data, setTableData]);
 
   // Change User Role
   const handleIsAdmin = () => {
@@ -116,15 +81,6 @@ function App() {
   const totalValue = useMemo(() => getTotalValue(tableData), [tableData]);
   const outOfStock = useMemo(() => getOutOfStock(tableData), [tableData]);
   const numberOfCat = useMemo(() => getNumberOfCat(tableData), [tableData]);
-
-  // if (error) {
-  //   return (
-  //     <div className="text-white">
-  //       <p>Code: {error.status}</p>
-  //       <p>Message: {error.statusText}</p>
-  //     </div>
-  //   );
-  // }
 
   if (!data && !error) {
     return <p className="text-white">Loading...</p>;
