@@ -1,4 +1,3 @@
-// Define a reusable SkeletonItem component
 function SkeletonItem() {
   return (
     <div className="flex gap-2 p-4 bg-slate-400 rounded-lg">
